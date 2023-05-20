@@ -7,6 +7,8 @@ import static com.healthcare.utils.patientValidationRules.validateAllInputs;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import com.healthcare.core.Patient;
@@ -31,7 +33,7 @@ public class HealthCare implements Serializable {
 //				System.out.println("enter filename to get records: ");
 //				String fileName = sc.next();
 				System.out.println(
-						"1. Add Patient Records 2. Display Patients 3. Display patient in Room type 4. Remove Diabetic Patients 5. Change ICu room type 6. Sort patients based on Gender");
+						"1. Add Patient Records 2. Display Patients 3. Display patient in Room type 4. Remove Diabetic Patients 5. Change ICU room type to Special 6. Sort patients based on Gender");
 				System.out.println("Enter Choice");
 				try {
 					switch (sc.nextInt()) {
@@ -62,9 +64,24 @@ public class HealthCare implements Serializable {
 						}
 						break;
 					case 4:
-						patients.removeIf(null);
+						patients.removeIf(p->p.getDisease().toLowerCase().equals("diabetes"));
+						System.out.println("Removed patients having Diabetes");
 						break;
 					default:
+						break;
+					case 5:
+						patients.stream()
+						.filter(p->p.getRoomType().equals(RoomType.ICU))
+						.forEach(p->p.setRoomType(RoomType.SPECIAL));
+						break;
+					case 6:
+						Collections.sort(patients, new Comparator<Patient>() {
+							@Override 
+							public int compare(Patient patient, Patient anotherPatient) {
+								return patient.getGender().compareTo(anotherPatient.getGender());
+							}
+				
+						});
 						break;
 					}
 
